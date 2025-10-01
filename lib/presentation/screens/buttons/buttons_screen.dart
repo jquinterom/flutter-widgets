@@ -50,7 +50,7 @@ class _ButtonsView extends StatelessWidget {
 
             FilledButton.icon(
               onPressed: () {},
-              icon: const Icon(Icons.ios_share_rounded),
+              icon: const Icon(Icons.accessibility),
               label: Text("Filled Icon"),
             ),
 
@@ -72,10 +72,7 @@ class _ButtonsView extends StatelessWidget {
 
             const _CustomButton(),
 
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.ios_share_sharp),
-            ),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.access_alarm)),
 
             IconButton(
               onPressed: null,
