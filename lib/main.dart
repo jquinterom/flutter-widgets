@@ -14,6 +14,7 @@ class MainApp extends StatelessWidget {
     final brightness = MediaQuery.of(context).platformBrightness;
 
     return MaterialApp.router(
+      title: 'Widgets App',
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       theme: AppTheme(selectedColor: 1, brightness: brightness).getTheme(),
