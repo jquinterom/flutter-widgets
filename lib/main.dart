@@ -17,12 +17,6 @@ class MainApp extends StatelessWidget {
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       theme: AppTheme(selectedColor: 14, brightness: brightness).getTheme(),
-      // home: Scaffold(body: Center(child: Text('Hello World!'))),
-      // home: const HomeScreen(),
-      // routes: {
-      //   '/buttons': (context) => const ButtonsScreen(),
-      //   '/cards': (context) => const CardsScreen(),
-      // },
     );
   }
 }
