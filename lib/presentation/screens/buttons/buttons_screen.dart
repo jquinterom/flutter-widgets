@@ -7,7 +7,7 @@ class ButtonsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Buttons')),
-      body: Center(child: Text('Buttons')),
+      body: Center(child: Text('Buttons Screen')),
     );
   }
 }
