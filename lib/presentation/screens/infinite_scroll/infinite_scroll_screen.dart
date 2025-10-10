@@ -43,6 +43,8 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
 
     if (!_isMounted) return;
     setState(() {});
+
+    moveScrollToBottom();
   }
 
   @override
@@ -65,6 +67,40 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
     super.dispose();
   }
 
+  void moveScrollToBottom() {
+    if (!_isMounted) return;
+
+    if (_scrollController.position.pixels + 150 <=
+        _scrollController.position.maxScrollExtent) {
+      return;
+    }
+
+    _scrollController.animateTo(
+      _scrollController.position.pixels + 150,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  Future<void> onRefresh() async {
+    _isLoading = true;
+    setState(() {});
+
+    await Future.delayed(const Duration(seconds: 3));
+    if (!_isMounted) return;
+
+    final lastId = imagesIds.last;
+
+    imagesIds.clear();
+    imagesIds.add(lastId + 1);
+
+    _addFiveImages();
+
+    _isLoading = false;
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,6 +110,7 @@ class _InfiniteScrollScreenState extends State<InfiniteScrollScreen> {
         isLoading: _isLoading,
         isMounted: _isMounted,
         scrollController: _scrollController,
+        onRefresh: onRefresh,
       ),
       floatingActionButton: _FloatingActionButtonInfiniteScroll(
         isLoading: _isLoading,
@@ -109,12 +146,14 @@ class _ScrollListView extends StatelessWidget {
   final bool isLoading;
   final bool isMounted;
   final ScrollController scrollController;
+  final Future<void> Function() onRefresh;
 
   const _ScrollListView({
     required this.imagesIds,
     required this.isLoading,
     required this.isMounted,
     required this.scrollController,
+    required this.onRefresh,
   });
 
   @override
@@ -123,20 +162,25 @@ class _ScrollListView extends StatelessWidget {
       context: context,
       removeTop: true,
       removeBottom: true,
-      child: ListView.builder(
-        controller: scrollController,
-        itemCount: imagesIds.length,
-        itemBuilder: (context, index) {
-          return FadeInImage(
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.cover,
-            placeholder: AssetImage('assets/images/jar-loading.gif'),
-            image: NetworkImage(
-              'https://picsum.photos/id/${imagesIds[index]}/300/300',
-            ),
-          );
-        },
+      child: RefreshIndicator(
+        edgeOffset: 8.0,
+        strokeWidth: 2,
+        onRefresh: onRefresh,
+        child: ListView.builder(
+          controller: scrollController,
+          itemCount: imagesIds.length,
+          itemBuilder: (context, index) {
+            return FadeInImage(
+              width: double.infinity,
+              height: 300,
+              fit: BoxFit.cover,
+              placeholder: AssetImage('assets/images/jar-loading.gif'),
+              image: NetworkImage(
+                'https://picsum.photos/id/${imagesIds[index]}/300/300',
+              ),
+            );
+          },
+        ),
       ),
     );
   }
